@@ -40,6 +40,14 @@ android {
         dataBinding true
     }
     namespace 'com.example.android.marsrealestate'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
 }
 
 dependencies {
@@ -61,7 +69,8 @@ dependencies {
     // Core with Ktx
     implementation "androidx.core:core-ktx:$version_core"
     detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:1.22.0"
-
+    implementation "com.squareup.retrofit2:retrofit:$version_retrofit"
+    implementation "com.squareup.retrofit2:converter-scalars:$version_retrofit"
 }
 
 detekt {
