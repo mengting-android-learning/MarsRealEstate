@@ -76,5 +76,5 @@ dependencies {
 
 detekt {
     autoCorrect = true
-    baseline = file("${rootProject.projectDir}/baseline.xml")
+    baseline = file("${rootProject.projectDir}/config/baseline.xml")
 }
