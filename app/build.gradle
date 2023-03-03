@@ -20,6 +20,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: "androidx.navigation.safeargs"
 apply plugin: 'io.gitlab.arturbosch.detekt'
+apply plugin: 'kotlin-parcelize'
 
 android {
     compileSdkVersion 33

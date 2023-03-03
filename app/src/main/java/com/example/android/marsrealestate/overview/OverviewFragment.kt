@@ -28,7 +28,9 @@ import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.android.marsrealestate.R
 import com.example.android.marsrealestate.databinding.FragmentOverviewBinding
 import com.example.android.marsrealestate.network.MarsApiFilter
@@ -59,7 +61,11 @@ class OverviewFragment : Fragment() {
         binding.lifecycleOwner = this
 
         binding.viewModel = viewModel
-        binding.photosGrid.adapter = PhotoGridAdapter()
+        binding.photosGrid.adapter = PhotoGridAdapter(
+            PhotoGridAdapter.OnClickListener {
+                viewModel.displayPropertyDetails(it)
+            }
+        )
 
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(
@@ -81,6 +87,18 @@ class OverviewFragment : Fragment() {
             },
             viewLifecycleOwner,
             Lifecycle.State.RESUMED
+        )
+
+        viewModel.navigateToSelectedProperty.observe(
+            viewLifecycleOwner,
+            Observer {
+                if (null != it) {
+                    this.findNavController().navigate(
+                        OverviewFragmentDirections.actionShowDetail(it)
+                    )
+                    viewModel.displayPropertyDetailsComplete()
+                }
+            }
         )
 
         return binding.root
