@@ -21,12 +21,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import com.example.android.marsrealestate.R
 import com.example.android.marsrealestate.databinding.FragmentOverviewBinding
+import com.example.android.marsrealestate.network.MarsApiFilter
 
 /**
  * This fragment shows the the status of the Mars real-estate web services transaction.
@@ -55,14 +60,29 @@ class OverviewFragment : Fragment() {
 
         binding.viewModel = viewModel
         binding.photosGrid.adapter = PhotoGridAdapter()
-        return binding.root
-    }
 
-    /**
-     * Inflates the overflow menu that contains filtering options.
-     */
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.overflow_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(
+            object : MenuProvider {
+                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                    menuInflater.inflate(R.menu.overflow_menu, menu)
+                }
+
+                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                    viewModel.updateFilter(
+                        when (menuItem.itemId) {
+                            R.id.show_rent_menu -> MarsApiFilter.SHOW_RENT
+                            R.id.show_buy_menu -> MarsApiFilter.SHOW_BUY
+                            else -> MarsApiFilter.SHOW_ALL
+                        }
+                    )
+                    return true
+                }
+            },
+            viewLifecycleOwner,
+            Lifecycle.State.RESUMED
+        )
+
+        return binding.root
     }
 }
